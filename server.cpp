@@ -6,6 +6,8 @@
 #include "util.h"
 
 using namespace std;
+//path del socket sin comando
+char *socket_path = "/tmp/db.tuples.sock";
 
 // Almacenamiento KV
 KVStore db;
@@ -27,6 +29,13 @@ int main(int argc, char** argv) {
 				return EXIT_FAILURE;
           }	    	
     }
+
+	if ( sflag == 1 ){
+	//hacer conexion de socket con pathname que nos entregan en la linea comando
+	}
+	else{
+	//hacer conexion de socket con pathname que queramos
+	}
 	
 	// Uso elemental del almacenamiento KV:
 	
