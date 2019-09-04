@@ -5,6 +5,7 @@
 #include <sys/socket.h>
 #include <sys/un.h>
 #include "util.h"
+#include <arpa/inet.h>
 
 using namespace std;
 //path del socket sin comando
@@ -15,6 +16,7 @@ int main(int argc, char** argv) {
 	string cmd = "";//codigo original
 	int insert_op = 0;
 	int k,v;//int for key and values.
+	int converted_k,converted_v;
 	//socket
 	struct sockaddr_un addr;
 	char buf[256];
@@ -127,13 +129,18 @@ int main(int argc, char** argv) {
 			cout << "Press 1 for key,value" << endl;
 			cout << "Press 2 for value" << endl << ">";
 			cin >> insert_op;
-			if(insert_op == 1){
+			if(insert_op == 1)
+			{
 				cout << "Desired key" << endl << ">";
 				cin >> k;
 				cout << "Desired value" << endl << ">";
 				cin >> v;
-				
-			}
+				converted_k = htonl(k);
+				converted_v = htonl(v);
+				write(fd,&converted_k,sizeof(converted_k));//pasa el key
+				write(fd,&converted_v,sizeof(converted_v));
+			}	
+			
 			else if(insert_op == 2)
 			{
 				cout << "Desired value" << endl << ">";

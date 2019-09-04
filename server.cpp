@@ -4,15 +4,21 @@
 #include <sys/socket.h>
 #include <sys/un.h>
 #include "util.h"
+#include <arpa/inet.h>
+#include <random>
 
 using namespace std;
 //path del socket sin comando
 char *socket_path = (char *)"/tmp/db.tuples.sock";
+int recieved_int;
 
+//contador entre 1000 y 100000
+int count = 1000 + (rand()% static_cast<int>(10000-1000+1));
 // Almacenamiento KV
 KVStore db;
 
 int main(int argc, char** argv) {	
+cout << count << endl;
 	struct sockaddr_un addr; //asociado a socket
 	int fd,cl,rc; // asociado a socket
 	char buf[256];//socketss
@@ -131,10 +137,9 @@ int main(int argc, char** argv) {
 			  continue;
 			}
 
-			while ( (rc=read(cl,buf,sizeof(buf))) > 0)
+			while ( (rc=read(cl,&recieved_int,sizeof(recieved_int))) > 0)
 			{
-			  printf("read %u bytes: %.*s\n", rc, rc, buf);
-			  cout << buf << endl;
+			  cout << ntohl(recieved_int) << endl;
 
 			}
 			if (rc == -1)
