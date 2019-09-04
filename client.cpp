@@ -13,7 +13,8 @@ char *socket_path = (char*)"/tmp/db.tuples.sock";
 int main(int argc, char** argv) {
 	
 	string cmd = "";//codigo original
-	
+	int insert_op = 0;
+	int k,v;//int for key and values.
 	//socket
 	struct sockaddr_un addr;
 	char buf[256];
@@ -109,7 +110,27 @@ int main(int argc, char** argv) {
 		}
 		else if(cmd == "insert")
 		{
-		
+			cout << "Press 1 for key,value" << endl;
+			cout << "Press 2 for value" << endl << ">";
+			cin >> insert_op;
+			if(insert_op == 1){
+				cout << "Desired key" << endl << ">";
+				cin >> k;
+				cout << "Desired value" << endl << ">";
+				cin >> v;
+				
+			}
+			else if(insert_op == 2)
+			{
+				cout << "Desired value" << endl << ">";
+				cin >> v;
+				insert_op = 0;
+			}
+			if(cin.fail())
+			{ 
+				cout << "cin failed, thus loop was generated, therefor terminated" << endl;
+				exit(-1);
+			}
 		}
 		else if(cmd == "get")
 		{
