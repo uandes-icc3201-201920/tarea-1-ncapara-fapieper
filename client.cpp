@@ -92,6 +92,18 @@ int main(int argc, char** argv) {
 				perror("connect error");
 				exit(-1);
 			}
+			/*if( (rc=read(STDIN_FILENO, buf, sizeof(buf))) > 0)
+			{
+				if (write(fd, buf, rc) != rc)
+				{
+				  	if (rc > 0) {fprintf(stderr,"partial write");}
+					else
+					{
+						perror("write error");
+						exit(-1);
+			  		}
+				}
+			}*/
 			cout<<"Connected"<<endl;
 		}
 		else if(cmd == "disconnect")
@@ -99,7 +111,9 @@ int main(int argc, char** argv) {
 			if (connect(fd, (struct sockaddr*)&addr, sizeof(addr)) != -1)
 			{
 				close(fd);
-			}		
+				cout << "Disconnected" << endl;
+			}	
+			cout << "No entro al disconected" << endl;	
 		}
 		else if(cmd == "quit"){
 			if (connect(fd, (struct sockaddr*)&addr, sizeof(addr)) != -1)
@@ -124,7 +138,6 @@ int main(int argc, char** argv) {
 			{
 				cout << "Desired value" << endl << ">";
 				cin >> v;
-				insert_op = 0;
 			}
 			if(cin.fail())
 			{ 

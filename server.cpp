@@ -134,6 +134,8 @@ int main(int argc, char** argv) {
 			while ( (rc=read(cl,buf,sizeof(buf))) > 0)
 			{
 			  printf("read %u bytes: %.*s\n", rc, rc, buf);
+			  cout << buf << endl;
+
 			}
 			if (rc == -1)
 			{
