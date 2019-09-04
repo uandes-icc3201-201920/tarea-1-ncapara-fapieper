@@ -95,6 +95,30 @@ cout << count << endl;
 			perror("listen error");
 			exit(-1);
 		}
+		while (1)
+		{
+			if ( (cl = accept(fd, NULL, NULL)) == -1)
+			{
+			  perror("accept error");
+			  continue;
+			}
+
+			while ( (rc=read(cl,&recieved_int,sizeof(recieved_int))) > 0)
+			{
+			  cout << ntohl(recieved_int) << endl;
+
+			}
+			if (rc == -1)
+			{
+			  perror("read");
+			  exit(-1);
+			}
+			else if (rc == 0)
+			{
+			  printf("EOF\n");
+			  close(cl);
+			}
+		}
 	}
 	else{
 	//hacer conexion de socket con pathname en tmp
