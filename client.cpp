@@ -61,7 +61,7 @@ int main(int argc, char** argv) {
 	//codigo original
 	while (cmd != "quit")
 	{
-		cout << ">";
+		cout << "Ingrese comando" <<endl <<  ">";
 		cin >> cmd;
 		if(cmd == "connect")
 		{
@@ -95,7 +95,10 @@ int main(int argc, char** argv) {
 		}
 		else if(cmd == "disconnect")
 		{
-						
+			if (connect(fd, (struct sockaddr*)&addr, sizeof(addr)) != -1)
+			{
+				close(fd);
+			}		
 		}
 		else if(cmd == "quit"){
 			if (connect(fd, (struct sockaddr*)&addr, sizeof(addr)) != -1)
@@ -103,6 +106,30 @@ int main(int argc, char** argv) {
 				close(fd);
 			}
 			exit(-1);
+		}
+		else if(cmd == "insert")
+		{
+		
+		}
+		else if(cmd == "get")
+		{
+		
+		}
+		else if(cmd == "peek")
+		{
+		
+		}
+		else if(cmd == "update")
+		{
+		
+		}
+		else if(cmd == "delete")
+		{
+		
+		}
+		else if(cmd == "list")
+		{
+		
 		}
 	}// original
 
