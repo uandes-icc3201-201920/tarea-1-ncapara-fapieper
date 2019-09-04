@@ -7,12 +7,15 @@
 
 using namespace std;
 //path del socket sin comando
-char *socket_path = "/tmp/db.tuples.sock";
+char *socket_path = (char *)"/tmp/db.tuples.sock";
 
 // Almacenamiento KV
 KVStore db;
 
 int main(int argc, char** argv) {	
+	struct sockaddr_un addr; //asociado a socket
+	int fd,cl,rc; // asociado a socket
+	char buf[256];//socketss
 	
 	int sflag = 0;
 	int opt;
@@ -29,15 +32,7 @@ int main(int argc, char** argv) {
 				return EXIT_FAILURE;
           }	    	
     }
-
-	if ( sflag == 1 ){
-	//hacer conexion de socket con pathname que nos entregan en la linea comando
-	}
-	else{
-	//hacer conexion de socket con pathname que queramos
-	}
-	
-	// Uso elemental del almacenamiento KV:
+    // Uso elemental del almacenamiento KV:
 	
 	// Creamos un arreglo de bytes a mano
 	byte data[] = { 0x01, 0x01, 0x01, 0x01, 0x01 };
@@ -57,6 +52,101 @@ int main(int argc, char** argv) {
 		
 	// Imprimir lo que hemos agregado al mapa KV.
 	cout << db[1000].size << " " << (int) db[1000].data[0] << endl;
+	
+	
+	//sockets
+	if ( sflag == 1 ){
+	//hacer conexion de socket con pathname que nos entregan en la linea comando
+	// si los argc > 2
+		if (argc > 2) {socket_path = argv[2];}
+		fd = socket(AF_UNIX,SOCK_STREAM,0);
+		if ( fd  == -1)
+		{
+			perror("Socket error");
+			exit(-1);
+		}
+		memset(&addr, 0, sizeof(addr));
+		addr.sun_family = AF_UNIX;
+		if (*socket_path == '\0') 
+		{
+			*addr.sun_path = '\0';
+			strncpy(addr.sun_path+1, socket_path+1, sizeof(addr.sun_path)-2);
+		} 
+		else 
+		{
+			strncpy(addr.sun_path, socket_path, sizeof(addr.sun_path)-1);
+			unlink(socket_path);
+		}
+
+		if (bind(fd, (struct sockaddr*)&addr, sizeof(addr)) == -1) 
+		{
+			perror("bind error");
+			exit(-1);
+		}
+
+		if (listen(fd, 5) == -1) 
+		{
+			perror("listen error");
+			exit(-1);
+		}
+	}
+	else{
+	//hacer conexion de socket con pathname en tmp
+		if (argc > 2) {socket_path = argv[2];}
+		fd = socket(AF_UNIX,SOCK_STREAM,0);
+		if ( fd == -1)
+		{
+			perror("Socket error");
+			exit(-1);
+		}
+		memset(&addr, 0, sizeof(addr));
+		addr.sun_family = AF_UNIX;
+		if (*socket_path == '\0') 
+		{
+			*addr.sun_path = '\0';
+			strncpy(addr.sun_path+1, socket_path+1, sizeof(addr.sun_path)-2);
+		} 
+		else 
+		{
+			strncpy(addr.sun_path, socket_path, sizeof(addr.sun_path)-1);
+			unlink(socket_path);
+		}
+
+		if (bind(fd, (struct sockaddr*)&addr, sizeof(addr)) == -1) 
+		{
+			perror("bind error");
+			exit(-1);
+		}
+
+		if (listen(fd, 5) == -1) 
+		{
+			perror("listen error");
+			exit(-1);
+		}
+		while (1)
+		{
+			if ( (cl = accept(fd, NULL, NULL)) == -1)
+			{
+			  perror("accept error");
+			  continue;
+			}
+
+			while ( (rc=read(cl,buf,sizeof(buf))) > 0)
+			{
+			  printf("read %u bytes: %.*s\n", rc, rc, buf);
+			}
+			if (rc == -1)
+			{
+			  perror("read");
+			  exit(-1);
+			}
+			else if (rc == 0)
+			{
+			  printf("EOF\n");
+			  close(cl);
+			}
+		}
+	}
 	
 	return 0;
 }
