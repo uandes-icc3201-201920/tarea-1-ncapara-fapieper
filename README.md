@@ -1,6 +1,7 @@
 # icc3201-201920-tarea1
 Repositorio base para tarea 1 de Sistemas Operativos y Redes 201920
 
+Nicolas Apara, Francisco Pieper
 ### Dificultades encontradas
 
 En esta parte del trabajo nos encontramos con varias dificultades. La primera fue como pasar un `string` de cliente a servidor, lo cual pudimos solucionar cambiando este `string` por `int` a travez de `htonl` y `ntohl` de la libreria arpa. A traves de esto logramos el flujo de informacion entre servidor/cliente y que se reconocieran las peticiones del cliente al servidor.
