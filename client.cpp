@@ -12,7 +12,7 @@ using namespace std;
 char *socket_path = (char*)"/tmp/db.tuples.sock";
 
 int main(int argc, char** argv) {
-	
+	int op1 = htonl(1),op2 = htonl(2),op3=htonl(3),op4=htonl(4);//insert(,) , insert , get , peek, opciones reservadas para el server
 	string cmd = "";
 	int insert_op = 0;
 	int k,v;//int for key and values.
@@ -102,6 +102,8 @@ int main(int argc, char** argv) {
 				cin >> k;
 				cout << "Desired value" << endl << ">";
 				cin >> v;
+				if( k > 0 && k < 5){ cout << "Key error" <<endl; exit(-1);}
+				write(fd,&op1,sizeof(op1));
 				converted_k = htonl(k);//host a network byte int
 				converted_v = htonl(v);
 				write(fd,&converted_k,sizeof(converted_k));//pasa el key
@@ -113,7 +115,9 @@ int main(int argc, char** argv) {
 				//envio de values
 				cout << "Desired value" << endl << ">";
 				cin >> v;
+				if( k > 0 && k < 5){ cout << "Key error" <<endl; exit(-1);}
 				converted_v = htonl(v);
+				write(fd,&op2,sizeof(op2));
 				write(fd,&converted_v,sizeof(converted_v));
 			}
 			if(cin.fail())
@@ -127,7 +131,10 @@ int main(int argc, char** argv) {
 			cout << "key of the desired value" << endl << ">";
 			cin >> k;
 			converted_k = htonl(k);
+			if( k > 0 && k < 5){ cout << "Key error" <<endl; exit(-1);}
+			write(fd,&op3,sizeof(op3));
 			write(fd,&converted_k,sizeof(converted_k));
+			//falta hacer read aqui
 			if(cin.fail())
 			{ //maneja error en caso de fallo de cin
 				cout << "cin failed, thus loop was generated, therefor terminated" << endl;
@@ -139,7 +146,10 @@ int main(int argc, char** argv) {
 			cout << "Input key" << endl << ">";
 			cin >> k;
 			converted_k = htonl(k);
+			if( k > 0 && k < 5){ cout << "Key error" <<endl; exit(-1);}
+			write(fd,&op4,sizeof(op4));
 			write(fd,&converted_k,sizeof(converted_k));
+			//falta hacer read aqui
 			if(cin.fail())
 			{ //maneja error en caso de fallo de cin
 				cout << "cin failed, thus loop was generated, therefor terminated" << endl;
@@ -158,7 +168,7 @@ int main(int argc, char** argv) {
 		{
 		
 		}
-	}// original
+	}
 
 	return 0;	
 }

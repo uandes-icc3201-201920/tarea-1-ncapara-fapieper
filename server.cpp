@@ -16,7 +16,6 @@ int recieved_int;
 int count = 1000 + (rand()% static_cast<int>(10000-1000+1));
 // Almacenamiento KV
 KVStore db;
-
 int main(int argc, char** argv) {	
 cout << count << endl;
 	struct sockaddr_un addr; //asociado a socket
@@ -164,6 +163,10 @@ cout << count << endl;
 			while ( (rc=read(cl,&recieved_int,sizeof(recieved_int))) > 0)
 			{
 			  cout << ntohl(recieved_int) << endl;
+			  if ( ntohl(recieved_int) == 1){ cout << "entre aqui del input 1" << endl;}
+			  else if(ntohl(recieved_int) == 2){cout << "entre aqui del input 2" << endl;}
+			  else if(ntohl(recieved_int) == 3){cout << "entre aqui del get" << endl;}
+			  else if(ntohl(recieved_int) == 4){cout << "entre aqui del peek" << endl;}
 
 			}
 			if (rc == -1)
