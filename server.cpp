@@ -28,6 +28,9 @@ void coneccion(int cl){ //en esta funcion es que corre el thread
 			else if(ntohl(recieved_int) == 2){cout << "entre aqui del input 2" << endl;}
 			else if(ntohl(recieved_int) == 3){cout << "entre aqui del get" << endl;}
 			else if(ntohl(recieved_int) == 4){cout << "entre aqui del peek" << endl;}
+			else if(ntohl(recieved_int) == 5){cout << "entre aqui del update" << endl;}
+			else if(ntohl(recieved_int) == 6){cout << "entre aqui del delete" << endl;}
+			else if(ntohl(recieved_int) == 7){cout << "entre aqui del list" << endl;}
 	    }
 	    if (rc == -1) {
 	      perror("read");

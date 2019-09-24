@@ -12,7 +12,7 @@ using namespace std;
 char *socket_path = (char*)"/tmp/db.tuples.sock";
 
 int main(int argc, char** argv) {
-	int op1 = htonl(1),op2 = htonl(2),op3=htonl(3),op4=htonl(4);//insert(,) , insert , get , peek, opciones reservadas para el server
+	int op1 = htonl(1),op2 = htonl(2),op3=htonl(3),op4=htonl(4),op5=htonl(5),op6=htonl(6),op7=htonl(7);//insert(,) , insert , get , peek,update,delete,list opciones reservadas para el server
 	string cmd = "";
 	int insert_op = 0;
 	int k,v;//int for key and values.
@@ -84,7 +84,7 @@ int main(int argc, char** argv) {
 		}
 		else if(cmd == "quit"){
 			//funciona
-			if (connect(fd, (struct sockaddr*)&addr, sizeof(addr)) != -1)
+			if (connect(fd, (struct sockaddr*)&addr, sizeof(addr)) == -1)
 			{
 				close(fd);
 			}
@@ -102,7 +102,7 @@ int main(int argc, char** argv) {
 				cin >> k;
 				cout << "Desired value" << endl << ">";
 				cin >> v;
-				if( k > 0 && k < 5){ cout << "Key error" <<endl; exit(-1);}
+				if( k > 0 && k < 8){ cout << "Key error\n1 to 7 not valid\n" <<endl; continue;}
 				write(fd,&op1,sizeof(op1));
 				converted_k = htonl(k);//host a network byte int
 				converted_v = htonl(v);
@@ -115,7 +115,6 @@ int main(int argc, char** argv) {
 				//envio de values
 				cout << "Desired value" << endl << ">";
 				cin >> v;
-				if( k > 0 && k < 5){ cout << "Key error" <<endl; exit(-1);}
 				converted_v = htonl(v);
 				write(fd,&op2,sizeof(op2));
 				write(fd,&converted_v,sizeof(converted_v));
@@ -131,7 +130,7 @@ int main(int argc, char** argv) {
 			cout << "key of the desired value" << endl << ">";
 			cin >> k;
 			converted_k = htonl(k);
-			if( k > 0 && k < 5){ cout << "Key error" <<endl; exit(-1);}
+			if( k > 0 && k < 8){ cout << "Key error\n1 to 7 not valid\n" <<endl; continue;}
 			write(fd,&op3,sizeof(op3));
 			write(fd,&converted_k,sizeof(converted_k));
 			//falta hacer read aqui
@@ -146,7 +145,7 @@ int main(int argc, char** argv) {
 			cout << "Input key" << endl << ">";
 			cin >> k;
 			converted_k = htonl(k);
-			if( k > 0 && k < 5){ cout << "Key error" <<endl; exit(-1);}
+			if( k > 0 && k < 8){ cout << "Key error\n1 to 7 not valid\n" <<endl; continue;}
 			write(fd,&op4,sizeof(op4));
 			write(fd,&converted_k,sizeof(converted_k));
 			//falta hacer read aqui
@@ -158,15 +157,43 @@ int main(int argc, char** argv) {
 		}
 		else if(cmd == "update")
 		{
+			cout << "Input key" << endl << ">";
+			cin >> k;
+			converted_k = htonl(k);
+			if( k > 0 && k < 8){ cout << "Key error\n1 to 7 not valid\n" <<endl; continue;}
+			write(fd,&op5,sizeof(op5));
+			write(fd,&converted_k,sizeof(converted_k));
+			//falta un read
+			if(cin.fail())
+			{ //maneja error en caso de fallo de cin
+				cout << "cin failed, thus loop was generated, therefor terminated" << endl;
+				exit(-1);
+			}
 		
 		}
 		else if(cmd == "delete")
 		{
-		
+			cout << "Input key" << endl << ">";
+			cin >> k;
+			converted_k = htonl(k);
+			if( k > 0 && k < 8){ cout << "Key error\n1 to 7 not valid\n" <<endl; continue;}
+			write(fd,&op6,sizeof(op6));
+			write(fd,&converted_k,sizeof(converted_k));
+			//falta un read
+			if(cin.fail())
+			{ //maneja error en caso de fallo de cin
+				cout << "cin failed, thus loop was generated, therefor terminated" << endl;
+				exit(-1);
+			}
 		}
 		else if(cmd == "list")
 		{
-		
+			write(fd,&op7,sizeof(op7));
+			while(1)
+			{
+				//read del socket para la lista
+				break;
+			}
 		}
 	}
 
