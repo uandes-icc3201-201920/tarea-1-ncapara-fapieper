@@ -75,12 +75,12 @@ int main(int argc, char** argv) {
 		}
 		else if(cmd == "disconnect")
 		{
-			if (connect(fd, (struct sockaddr*)&addr, sizeof(addr)) != -1)
+			if (connect(fd, (struct sockaddr*)&addr, sizeof(addr)) == -1)
 			{
 				close(fd);
 				cout << "Disconnected" << endl;
 			}	
-			cout << "No entro al disconected" << endl;	//debug falta arreglar
+			//cout << "No entro al disconected" << endl;	//debug falta arreglar
 		}
 		else if(cmd == "quit"){
 			//funciona
