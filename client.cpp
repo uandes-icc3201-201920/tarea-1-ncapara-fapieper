@@ -21,6 +21,7 @@ int main(int argc, char** argv) {
 	struct sockaddr_un addr;
 	char buf[256];
 	int fd,rc;
+	int nn; //for errors
 	
 	/*
 		if( (rc=read(STDIN_FILENO, buf, sizeof(buf))) > 0)
@@ -133,7 +134,19 @@ int main(int argc, char** argv) {
 			if( k > 0 && k < 8){ cout << "Key error\n1 to 7 not valid\n" <<endl; continue;}
 			write(fd,&op3,sizeof(op3));
 			write(fd,&converted_k,sizeof(converted_k));
-			//falta hacer read aqui
+			//read
+			if ( ( rc=read(fd,&nn,sizeof(nn))) > 0 )
+			{
+				if( ntohl(nn) == 1)
+				{
+					cout << "Key not found" << endl;
+				}
+				else
+				{
+					cout << htonl(nn) << endl;
+				}
+				
+			}
 			if(cin.fail())
 			{ //maneja error en caso de fallo de cin
 				cout << "cin failed, thus loop was generated, therefor terminated" << endl;

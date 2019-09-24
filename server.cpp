@@ -23,6 +23,8 @@ map<int,int> db;
 void coneccion(int cl){ //en esta funcion es que corre el thread
 	int key,values;
 	int rc;
+	int temporal_K, temporal_V;
+	int nn = htonl(1); //not found value
 	map<int,int>::iterator itr;
 	while (1) {
 	    while ( (rc=read(cl,&recieved_int,sizeof(recieved_int))) > 0) {
@@ -39,7 +41,22 @@ void coneccion(int cl){ //en esta funcion es que corre el thread
 				
 				
 			}
-			else if(ntohl(recieved_int) == 3){cout << "entre aqui del get" << endl;}
+			else if(ntohl(recieved_int) == 3)
+			{
+				cout << "entre aqui del get" << endl;
+				if( (rc=read(cl,&key,sizeof(key))) > 0 )
+				{
+					for ( itr = db.begin(); itr != db.end(); ++itr)
+					{
+						if( itr->first == ntohl(key) )
+						{
+							temporal_V = htonl(itr->first);
+							write(cl,&temporal_V,sizeof(temporal_V));
+						}
+					}
+					write(cl,&nn,sizeof(nn));
+				}
+			}
 			else if(ntohl(recieved_int) == 4){cout << "entre aqui del peek" << endl;}
 			else if(ntohl(recieved_int) == 5){cout << "entre aqui del update" << endl;}
 			else if(ntohl(recieved_int) == 6){cout << "entre aqui del delete" << endl;}
@@ -110,6 +127,7 @@ int main(int argc, char** argv) {
 	
 	//sockets
 	if ( sflag == 1 ){
+		cout << "No funciona con socket ingresado por cmd" << endl;
 	//hacer conexion de socket con pathname que nos entregan en la linea comando
 	// si los argc > 2
 		/*if (argc > 2) {socket_path = argv[2];}
@@ -209,34 +227,6 @@ int main(int argc, char** argv) {
 	   		}
 			threads.emplace_back(new thread(coneccion,cl));//aqui asigno el thread a la funcion
 		}
-		/*while (1)
-		{
-			if ( (cl = accept(fd, NULL, NULL)) == -1)
-			{
-			  perror("accept error");
-			  continue;
-			}
-
-			while ( (rc=read(cl,&recieved_int,sizeof(recieved_int))) > 0)
-			{
-			  cout << ntohl(recieved_int) << endl;
-			  if ( ntohl(recieved_int) == 1){ cout << "entre aqui del input 1" << endl;}
-			  else if(ntohl(recieved_int) == 2){cout << "entre aqui del input 2" << endl;}
-			  else if(ntohl(recieved_int) == 3){cout << "entre aqui del get" << endl;}
-			  else if(ntohl(recieved_int) == 4){cout << "entre aqui del peek" << endl;}
-
-			}
-			if (rc == -1)
-			{
-			  perror("read");
-			  exit(-1);
-			}
-			else if (rc == 0)
-			{
-			  printf("EOF\n");
-			  close(cl);
-			}
-		}*/
 	}
 	
 	return 0;
