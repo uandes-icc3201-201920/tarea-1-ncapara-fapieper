@@ -26,26 +26,31 @@ void coneccion(int cl){ //en esta funcion es que corre el thread
 	map<int,int>::iterator itr;
 	while (1) {
 	    while ( (rc=read(cl,&recieved_int,sizeof(recieved_int))) > 0) {
-			cout << ntohl(recieved_int) << endl;
+			//cout << ntohl(recieved_int) << endl;
 			if ( ntohl(recieved_int) == 1){ cout << "entre aqui del input 1" << endl;}
 			else if(ntohl(recieved_int) == 2)
 			{
-				cout << "entre aqui del input 2" << endl;
 				if( (rc=read(cl,&values,sizeof(values))) > 0 )
 				{
 					db.insert(pair<int,int>(count,ntohl(values)));
 					count++;
+					cout << "bd actualizada" << endl;
 				}
+				
 				
 			}
 			else if(ntohl(recieved_int) == 3){cout << "entre aqui del get" << endl;}
 			else if(ntohl(recieved_int) == 4){cout << "entre aqui del peek" << endl;}
 			else if(ntohl(recieved_int) == 5){cout << "entre aqui del update" << endl;}
 			else if(ntohl(recieved_int) == 6){cout << "entre aqui del delete" << endl;}
-			else if(ntohl(recieved_int) == 7){cout << "entre aqui del list" << endl;}
-			for ( itr = db.begin(); itr != db.end(); ++itr)
+			else if(ntohl(recieved_int) == 7)
 			{
-				cout << '\t' << itr->first << '\t' << itr->second << '\n';
+				cout << "entre aqui del list" << endl;
+				cout << "\tKey\tValue\n";
+				for ( itr = db.begin(); itr != db.end(); ++itr)
+				{
+					cout << '\t' << itr->first << '\t' << itr->second << '\n';
+				}
 			}
 	    }
 	    if (rc == -1) {
