@@ -21,18 +21,19 @@ KVStore db;
 void coneccion(int cl){ //en esta funcion es que corre el thread
 	char buf[100];
 	int rc;
-	printf("Hola cliente\nEsperando comandos...\n");
 	while (1) {
 	    while ( (rc=read(cl,&recieved_int,sizeof(recieved_int))) > 0) {
-	      printf("read %u bytes: %.*s\n", rc, rc, buf);
-	      cout << rc << endl;
+			cout << ntohl(recieved_int) << endl;
+			if ( ntohl(recieved_int) == 1){ cout << "entre aqui del input 1" << endl;}
+			else if(ntohl(recieved_int) == 2){cout << "entre aqui del input 2" << endl;}
+			else if(ntohl(recieved_int) == 3){cout << "entre aqui del get" << endl;}
+			else if(ntohl(recieved_int) == 4){cout << "entre aqui del peek" << endl;}
 	    }
 	    if (rc == -1) {
 	      perror("read");
 	      exit(-1);
 	    }
 	    else if (rc == 0) {
-	      printf("EOF\nThread ended by disconnection\nWaiting for new conections....\n");
 	      close(cl);
 	      break;
 	    }
