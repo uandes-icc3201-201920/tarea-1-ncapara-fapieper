@@ -2,6 +2,8 @@
 Repositorio base para tarea 1 de Sistemas Operativos y Redes 201920
 
 Nicolas Apara, Francisco Pieper
+
+### TAREA 1 parte 1
 ### Dificultades encontradas
 
 En esta parte del trabajo nos encontramos con varias dificultades. La primera fue como pasar un `string` de cliente a servidor, lo cual pudimos solucionar cambiando este `string` por `int` a travez de `htonl` y `ntohl` de la libreria arpa. A traves de esto logramos el flujo de informacion entre servidor/cliente y que se reconocieran las peticiones del cliente al servidor.
@@ -36,3 +38,32 @@ Las funciones que no logramos implementar fueron:
 
 Para la conexion Server/Client y sus comandos, tuvimos que dejar reservado los numeros del 1 al 7 como keys particulares, por lo que en el case de que el Client quiera hacer un key-value usando uno de estos numeros, se provocara un error, por lo que programamos un  `exit(-1)` si ocurre este caso y luego un mensaje de error en pantalla.
 
+### TAREA 1 parte 2
+
+En esta parte del trabajo nos encontramos con la dificultad de poder hacer los threads del servidor, de tal forma en que cada thread atienda un cliente. Lo cual solucionamos usando la libreria threads y vector para crear un vector de threads que los mantiene sin interrumpir el servidor.
+
+'''
+	vector<unique_ptr<thread>> threads;
+	for(;;)
+	{
+		if ( (cl = accept(fd, NULL, NULL)) == -1)
+		{
+	    		perror("accept error");
+	     		continue;
+	   	}
+		threads.emplace_back(new thread(coneccion,cl));//aqui asigno el thread a la funcion
+	}
+'''
+La siguiente dificultad que encontramos fue lograr que al salir de un thread, no se termine el proceso del server principal.
+
+### Funciones no implementadas
+
+Las funciones que no logramos implementar fueron:
+ - En nuestro Client:
+  - Update(), falta implementar el read
+  - Delete(), falta implementar el read
+  - Peek(), esta incompleta, falta que reciban la informacion del Server, es decir, no esta implementado el Read.
+
+### Problemas conocidos
+
+Para la conexion Server/Client y sus comandos, tuvimos que dejar reservado los numeros del 1 al 8 como keys particulares, por lo que en el case de que el Client quiera hacer un key-value usando uno de estos numeros, se provocara un error, por lo que programamos un mensaje de error en pantalla y un  `continue` si ocurre este caso.
