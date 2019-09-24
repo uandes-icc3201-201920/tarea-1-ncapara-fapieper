@@ -6,6 +6,7 @@
 #include "util.h"
 #include <arpa/inet.h>
 #include <random>
+#include <thread>
 
 using namespace std;
 //path del socket sin comando
@@ -16,12 +17,35 @@ int recieved_int;
 int count = 1000 + (rand()% static_cast<int>(10000-1000+1));
 // Almacenamiento KV
 KVStore db;
+
+void coneccion(int cl){ //en esta funcion es que corre el thread
+	char buf[100];
+	int rc;
+	printf("Hola cliente\nEsperando comandos...\n");
+	while (1) {
+	    while ( (rc=read(cl,&recieved_int,sizeof(recieved_int))) > 0) {
+	      printf("read %u bytes: %.*s\n", rc, rc, buf);
+	      cout << rc << endl;
+	    }
+	    if (rc == -1) {
+	      perror("read");
+	      exit(-1);
+	    }
+	    else if (rc == 0) {
+	      printf("EOF\nThread ended by disconnection\nWaiting for new conections....\n");
+	      close(cl);
+	      break;
+	    }
+	}
+	pthread_exit(NULL);
+}
+
 int main(int argc, char** argv) {	
-cout << count << endl;
+	cout << count << endl;
 	struct sockaddr_un addr; //asociado a socket
 	int fd,cl,rc; // asociado a socket
 	char buf[256];//socketss
-	
+	vector<unique_ptr<thread>> threads;
 	int sflag = 0;
 	int opt;
 	
@@ -63,7 +87,7 @@ cout << count << endl;
 	if ( sflag == 1 ){
 	//hacer conexion de socket con pathname que nos entregan en la linea comando
 	// si los argc > 2
-		if (argc > 2) {socket_path = argv[2];}
+		/*if (argc > 2) {socket_path = argv[2];}
 		fd = socket(AF_UNIX,SOCK_STREAM,0);
 		if ( fd  == -1)
 		{
@@ -117,11 +141,10 @@ cout << count << endl;
 			  printf("EOF\n");
 			  close(cl);
 			}
-		}
+		}*/
 	}
 	else{
 	//hacer conexion de socket con pathname en tmp
-		if (argc > 2) {socket_path = argv[2];}
 		fd = socket(AF_UNIX,SOCK_STREAM,0);
 		if ( fd == -1)
 		{
@@ -147,12 +170,21 @@ cout << count << endl;
 			exit(-1);
 		}
 
-		if (listen(fd, 5) == -1) 
+		if (listen(fd, 3) == -1) 
 		{
 			perror("listen error");
 			exit(-1);
 		}
-		while (1)
+		for(;;)
+		{
+			if ( (cl = accept(fd, NULL, NULL)) == -1)
+			{
+	    			perror("accept error");
+	     			continue;
+	   		}
+			threads.emplace_back(new thread(coneccion,cl));//aqui asigno el thread a la funcion
+		}
+		/*while (1)
 		{
 			if ( (cl = accept(fd, NULL, NULL)) == -1)
 			{
@@ -179,7 +211,7 @@ cout << count << endl;
 			  printf("EOF\n");
 			  close(cl);
 			}
-		}
+		}*/
 	}
 	
 	return 0;

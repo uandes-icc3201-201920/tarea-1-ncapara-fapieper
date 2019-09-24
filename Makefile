@@ -7,11 +7,11 @@ PROGS = client server
 
 #all: $(PROGS) $(DOC)
 server: serv.o
-	$(CC) -o server serv.o
+	$(CC) -o server serv.o -lpthread
 client: cli.o
 	$(CC) -o client cli.o
 serv.o: server.cpp util.h
-	$(CC) -o serv.o -c server.cpp
+	$(CC) -o serv.o -c server.cpp -lpthread
 cli.o: client.cpp
 	$(CC) -o cli.o -c client.cpp
 
