@@ -50,7 +50,7 @@ void coneccion(int cl){ //en esta funcion es que corre el thread
 					{
 						if( itr->first == ntohl(key) )
 						{
-							temporal_V = htonl(itr->first);
+							temporal_V = htonl(itr->second);
 							write(cl,&temporal_V,sizeof(temporal_V));
 						}
 					}
@@ -69,6 +69,7 @@ void coneccion(int cl){ //en esta funcion es que corre el thread
 					cout << '\t' << itr->first << '\t' << itr->second << '\n';
 				}
 			}
+			else if(ntohl(recieved_int) == 8) { close(cl); break;}
 	    }
 	    if (rc == -1) {
 	      perror("read");

@@ -12,7 +12,7 @@ using namespace std;
 char *socket_path = (char*)"/tmp/db.tuples.sock";
 
 int main(int argc, char** argv) {
-	int op1 = htonl(1),op2 = htonl(2),op3=htonl(3),op4=htonl(4),op5=htonl(5),op6=htonl(6),op7=htonl(7);//insert(,) , insert , get , peek,update,delete,list opciones reservadas para el server
+	int op1=htonl(1),op2=htonl(2),op3=htonl(3),op4=htonl(4),op5=htonl(5),op6=htonl(6),op7=htonl(7),op8=htonl(8);//insert(,) , insert , get , peek,update,delete,list opciones reservadas para el server
 	string cmd = "";
 	int insert_op = 0;
 	int k,v;//int for key and values.
@@ -81,7 +81,7 @@ int main(int argc, char** argv) {
 				close(fd);
 				cout << "Disconnected" << endl;
 			}	
-			//cout << "No entro al disconected" << endl;	//debug falta arreglar
+			//cout << "No entro al disconected" << endl;
 		}
 		else if(cmd == "quit"){
 			//funciona
@@ -103,7 +103,7 @@ int main(int argc, char** argv) {
 				cin >> k;
 				cout << "Desired value" << endl << ">";
 				cin >> v;
-				if( k > 0 && k < 8){ cout << "Key error\n1 to 7 not valid\n" <<endl; continue;}
+				if( k > 0 && k < 9){ cout << "Key error\n1 to 8 not valid\n" <<endl; continue;}
 				write(fd,&op1,sizeof(op1));
 				converted_k = htonl(k);//host a network byte int
 				converted_v = htonl(v);
@@ -131,7 +131,7 @@ int main(int argc, char** argv) {
 			cout << "key of the desired value" << endl << ">";
 			cin >> k;
 			converted_k = htonl(k);
-			if( k > 0 && k < 8){ cout << "Key error\n1 to 7 not valid\n" <<endl; continue;}
+			if( k > 0 && k < 9){ cout << "Key error\n1 to 8 not valid\n" <<endl; continue;}
 			write(fd,&op3,sizeof(op3));
 			write(fd,&converted_k,sizeof(converted_k));
 			//read
@@ -158,7 +158,7 @@ int main(int argc, char** argv) {
 			cout << "Input key" << endl << ">";
 			cin >> k;
 			converted_k = htonl(k);
-			if( k > 0 && k < 8){ cout << "Key error\n1 to 7 not valid\n" <<endl; continue;}
+			if( k > 0 && k < 9){ cout << "Key error\n1 to 8 not valid\n" <<endl; continue;}
 			write(fd,&op4,sizeof(op4));
 			write(fd,&converted_k,sizeof(converted_k));
 			//falta hacer read aqui
@@ -173,7 +173,7 @@ int main(int argc, char** argv) {
 			cout << "Input key" << endl << ">";
 			cin >> k;
 			converted_k = htonl(k);
-			if( k > 0 && k < 8){ cout << "Key error\n1 to 7 not valid\n" <<endl; continue;}
+			if( k > 0 && k < 9){ cout << "Key error\n1 to 8 not valid\n" <<endl; continue;}
 			write(fd,&op5,sizeof(op5));
 			write(fd,&converted_k,sizeof(converted_k));
 			//falta un read
@@ -189,7 +189,7 @@ int main(int argc, char** argv) {
 			cout << "Input key" << endl << ">";
 			cin >> k;
 			converted_k = htonl(k);
-			if( k > 0 && k < 8){ cout << "Key error\n1 to 7 not valid\n" <<endl; continue;}
+			if( k > 0 && k < 9){ cout << "Key error\n1 to 8 not valid\n" <<endl; continue;}
 			write(fd,&op6,sizeof(op6));
 			write(fd,&converted_k,sizeof(converted_k));
 			//falta un read
@@ -209,6 +209,7 @@ int main(int argc, char** argv) {
 			}
 		}
 	}
-
+	write(fd,&op8,sizeof(op8));
+	close(fd);
 	return 0;	
 }
