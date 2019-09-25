@@ -63,6 +63,7 @@ Las funciones que no logramos implementar fueron:
   - Update(), falta implementar el read
   - Delete(), falta implementar el read
   - Peek(), esta incompleta, falta que reciban la informacion del Server, es decir, no esta implementado el Read.
+No logramos hacer que el usuario escribiera la direccion del servidor ocupando el flag -s, es por esto que es necesario escribir la direccion /tmp/db.tuples.sock cuando se pregunte en la consola del usuario luego de escribir el comando connect.
 
 ### Problemas conocidos
 
